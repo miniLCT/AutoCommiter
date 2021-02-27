@@ -1,0 +1,29 @@
+name: Commiter
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+  push:
+    branches: 
+      - main
+  schedule:
+      - cron: '30 8 * * *'
+
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: start to commit
+        uses: actions/checkout@v2
+      - name: begin git
+        run: |
+          git config --global user.email "920861971@qq.com"
+          git config --global user.name "miniLCT"
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git pull 
+          nowtime=$(date)
+          echo ${nowtime}>>autocommitlist
+          git add autocommitlist
+          git commit -m " ${nowtime} "
+          git push
